@@ -6,6 +6,7 @@
     <title>Mavora</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
     <style>
+        /* (style tetap sama seperti sebelumnya) */
         * {
             margin: 0;
             padding: 0;
@@ -604,7 +605,7 @@
             }
         });
 
-        // Fungsi generate thumbnail
+        // ================== PERBAIKAN FUNGSI GENERATE THUMBNAIL ==================
         function generateThumbnail(videoFile) {
             return new Promise((resolve, reject) => {
                 const video = document.createElement('video');
@@ -612,19 +613,68 @@
                 video.playsInline = true;
                 video.muted = true;
                 video.src = URL.createObjectURL(videoFile);
-                
-                video.onloadeddata = () => video.currentTime = 1;
-                video.onseeked = () => {
-                    const canvas = document.createElement('canvas');
-                    canvas.width = video.videoWidth;
-                    canvas.height = video.videoHeight;
-                    canvas.getContext('2d').drawImage(video, 0, 0);
-                    canvas.toBlob(blob => {
-                        blob ? resolve(blob) : reject('Gagal thumbnail');
-                        URL.revokeObjectURL(video.src);
-                    }, 'image/jpeg', 0.8);
+
+                // Timeout jika proses terlalu lama (misal video corrupt)
+                const timeout = setTimeout(() => {
+                    cleanup();
+                    reject('Timeout: tidak dapat menghasilkan thumbnail');
+                }, 10000); // 10 detik
+
+                const cleanup = () => {
+                    clearTimeout(timeout);
+                    video.removeEventListener('loadeddata', onLoadedData);
+                    video.removeEventListener('seeked', onSeeked);
+                    video.removeEventListener('error', onError);
+                    URL.revokeObjectURL(video.src);
                 };
-                video.onerror = () => reject('Gagal load video');
+
+                const onError = (e) => {
+                    cleanup();
+                    reject('Gagal memuat video: ' + (e.message || 'unknown error'));
+                };
+
+                const onLoadedData = () => {
+                    // Tentukan waktu thumbnail: jika durasi < 1 detik, ambil di 0.1 detik
+                    const duration = video.duration;
+                    let seekTime = 1.0;
+                    if (duration < 1.0) {
+                        seekTime = duration * 0.5; // ambil di pertengahan
+                        if (seekTime < 0.1) seekTime = 0.1;
+                    }
+                    video.currentTime = seekTime;
+                };
+
+                const onSeeked = () => {
+                    try {
+                        const canvas = document.createElement('canvas');
+                        canvas.width = video.videoWidth || 640; // fallback lebar
+                        canvas.height = video.videoHeight || 480; // fallback tinggi
+                        if (canvas.width === 0 || canvas.height === 0) {
+                            // Jika ukuran video tidak terbaca, gunakan ukuran default
+                            canvas.width = 640;
+                            canvas.height = 480;
+                        }
+                        const ctx = canvas.getContext('2d');
+                        ctx.drawImage(video, 0, 0, canvas.width, canvas.height);
+                        
+                        // Konversi ke blob dengan kualitas 0.8
+                        canvas.toBlob(blob => {
+                            cleanup();
+                            if (blob) {
+                                resolve(blob);
+                            } else {
+                                reject('Gagal membuat blob thumbnail');
+                            }
+                        }, 'image/jpeg', 0.8);
+                    } catch (err) {
+                        cleanup();
+                        reject('Gagal menggambar thumbnail: ' + err.message);
+                    }
+                };
+
+                video.addEventListener('loadeddata', onLoadedData);
+                video.addEventListener('seeked', onSeeked);
+                video.addEventListener('error', onError);
             });
         }
 
