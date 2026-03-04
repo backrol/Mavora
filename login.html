@@ -1,0 +1,234 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mavora</title>
+    <!-- Font Awesome untuk ikon -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: linear-gradient(145deg, #0f0f1e 0%, #1a1a2f 100%);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            animation: bgShift 20s ease infinite alternate;
+            background-size: 200% 200%;
+            color: #f0f0f0;
+        }
+
+        @keyframes bgShift {
+            0% { background-position: 0% 0%; }
+            100% { background-position: 100% 100%; }
+        }
+
+        .login-wrapper {
+            width: 100%;
+            padding: 1.5rem;
+            animation: fadeInUp 0.8s ease;
+        }
+
+        @keyframes fadeInUp {
+            from { opacity: 0; transform: translateY(30px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .login-card {
+            max-width: 440px;
+            margin: 0 auto;
+            background: rgba(30, 30, 50, 0.6);
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 48px;
+            padding: 3rem 2.5rem;
+            box-shadow: 0 30px 50px rgba(0, 0, 0, 0.6), 0 0 0 1px rgba(255, 255, 255, 0.05) inset;
+            text-align: center;
+            transition: transform 0.3s, box-shadow 0.3s;
+        }
+
+        .login-card:hover {
+            transform: translateY(-6px);
+            box-shadow: 0 40px 60px rgba(0, 0, 0, 0.8), 0 0 0 1px #ff4b2b80 inset;
+        }
+
+        .logo {
+            font-size: 3.5rem;
+            font-weight: 700;
+            margin-bottom: 0.75rem;
+            background: linear-gradient(135deg, #ff416c, #ff4b2b);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            display: inline-block;
+            filter: drop-shadow(0 5px 10px #ff4b2b40);
+        }
+
+        .brand {
+            font-size: 1.8rem;
+            font-weight: 600;
+            margin-bottom: 0.5rem;
+            letter-spacing: 1px;
+        }
+
+        .subtitle {
+            color: #b0b0d0;
+            margin-bottom: 2.5rem;
+            font-size: 1.1rem;
+            line-height: 1.6;
+            border-bottom: 1px dashed rgba(255,255,255,0.15);
+            padding-bottom: 1.5rem;
+        }
+
+        .btn-google {
+            background: #ffffff10;
+            border: 2px solid rgba(255,255,255,0.15);
+            color: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 12px;
+            width: 100%;
+            padding: 1rem 1.5rem;
+            border-radius: 60px;
+            font-size: 1.2rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+            backdrop-filter: blur(5px);
+            margin-bottom: 2rem;
+            box-shadow: 0 8px 20px rgba(0,0,0,0.3);
+        }
+
+        .btn-google i {
+            font-size: 1.6rem;
+            background: conic-gradient(from 0deg, #4285F4, #EA4335, #FBBC05, #34A853, #4285F4);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .btn-google:hover {
+            background: #ff4b2b30;
+            border-color: #ff4b2b;
+            transform: scale(1.02);
+            box-shadow: 0 15px 30px #ff4b2b60;
+        }
+
+        .btn-google:active {
+            transform: scale(0.98);
+        }
+
+        .back-link {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            color: #a0a0c0;
+            text-decoration: none;
+            font-size: 1rem;
+            transition: all 0.3s;
+            padding: 0.5rem 1rem;
+            border-radius: 40px;
+            background: rgba(255,255,255,0.02);
+        }
+
+        .back-link i {
+            transition: transform 0.2s;
+        }
+
+        .back-link:hover {
+            color: #ff4b2b;
+            background: rgba(255, 75, 43, 0.1);
+        }
+
+        .back-link:hover i {
+            transform: translateX(-4px);
+        }
+
+        .footer-note {
+            margin-top: 2rem;
+            font-size: 0.9rem;
+            color: #606080;
+        }
+
+        /* animasi fade in untuk card */
+        .login-card {
+            animation: cardPop 0.6s cubic-bezier(0.175, 0.885, 0.32, 1.275) backwards;
+        }
+
+        @keyframes cardPop {
+            0% { opacity: 0; transform: scale(0.9) translateY(20px); }
+            100% { opacity: 1; transform: scale(1) translateY(0); }
+        }
+
+        /* responsif */
+        @media (max-width: 480px) {
+            .login-card { padding: 2rem 1.5rem; }
+            .logo { font-size: 2.8rem; }
+            .brand { font-size: 1.5rem; }
+            .btn-google { font-size: 1rem; padding: 0.8rem; }
+        }
+    </style>
+</head>
+<body>
+    <div class="login-wrapper">
+        <div class="login-card">
+            <div class="logo">
+                <i class="fab fa-youtube"></i>
+            </div>
+            <div class="brand">MOVARA</div>
+            <div class="subtitle">
+                <i class="fas fa-video" style="margin-right: 8px;"></i>
+                Login untuk mengupload video dan mengakses profil Anda.
+            </div>
+
+            <button id="login-btn" class="btn-google">
+                <i class="fab fa-google"></i> 
+                <span>Login dengan Google</span>
+            </button>
+
+            <a href="index.html" class="back-link">
+                <i class="fas fa-arrow-left"></i> Kembali ke Beranda
+            </a>
+
+            <div class="footer-note">
+                <i class="fas fa-shield-alt" style="margin-right: 6px;"></i>
+                Aman & terenkripsi
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script type="module">
+        // Konfigurasi Supabase (sama persis dengan sebelumnya)
+        const SUPABASE_URL = 'https://dpnouqcvofdhylahjhqq.supabase.co';
+        const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImRwbm91cWN2b2ZkaHlsYWhqaHFxIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzI0NjU1MzYsImV4cCI6MjA4ODA0MTUzNn0.z0DUqOSRIjnLvdeqT6O_-5VV1UZ62Y5SsC0dFNmwafM';
+
+        const { createClient } = supabase;
+        const supabaseClient = createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+
+        document.getElementById('login-btn').addEventListener('click', async () => {
+            try {
+                const { error } = await supabaseClient.auth.signInWithOAuth({
+                    provider: 'google',
+                    options: {
+                        redirectTo: window.location.origin + '/index.html' // kembali ke beranda setelah login
+                    }
+                });
+                if (error) throw error;
+            } catch (err) {
+                alert('Gagal login: ' + err.message);
+            }
+        });
+    </script>
+</body>
+
+</html>
+

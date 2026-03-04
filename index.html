@@ -1,0 +1,521 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <!-- Google tag (gtag.js) -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-GB80Y69K6L"></script>
+    <script>
+        window.dataLayer = window.dataLayer || [];
+        function gtag(){dataLayer.push(arguments);}
+        gtag('js', new Date());
+        gtag('config', 'G-GB80Y69K6L');
+    </script>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mavora</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: linear-gradient(145deg, #0f0f1e 0%, #1a1a2f 100%);
+            min-height: 100vh;
+            color: #f0f0f0;
+            line-height: 1.5;
+            animation: bgShift 20s ease infinite alternate;
+            background-size: 200% 200%;
+        }
+
+        @keyframes bgShift {
+            0% { background-position: 0% 0%; }
+            100% { background-position: 100% 100%; }
+        }
+
+        header {
+            background: rgba(10, 10, 20, 0.6);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+            padding: 0.8rem 2rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+            animation: slideDown 0.5s ease;
+        }
+
+        @keyframes slideDown {
+            from { transform: translateY(-100%); opacity: 0; }
+            to { transform: translateY(0); opacity: 1; }
+        }
+
+        header h1 {
+            font-size: 1.8rem;
+            font-weight: 600;
+            background: linear-gradient(135deg, #ff416c, #ff4b2b);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            letter-spacing: 0.5px;
+        }
+
+        #auth-section {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        #user-info {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            background: rgba(255,255,255,0.05);
+            padding: 0.4rem 0.8rem 0.4rem 0.4rem;
+            border-radius: 40px;
+            border: 1px solid rgba(255,255,255,0.1);
+            backdrop-filter: blur(5px);
+        }
+
+        #user-photo {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            border: 2px solid #ff4b2b;
+            object-fit: cover;
+            transition: transform 0.2s;
+        }
+
+        #user-photo:hover {
+            transform: scale(1.1);
+        }
+
+        #user-name {
+            font-weight: 500;
+            color: white;
+        }
+
+        #login-btn {
+            background: rgba(255, 75, 43, 0.2);
+            border: 1px solid #ff4b2b;
+            color: white;
+            padding: 0.5rem 1.2rem;
+            border-radius: 40px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+            font-size: 0.9rem;
+            text-decoration: none;
+            display: inline-block;
+        }
+
+        #login-btn:hover {
+            background: #ff4b2b;
+            box-shadow: 0 0 15px #ff4b2b;
+            transform: scale(1.05);
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 2rem auto;
+            padding: 0 2rem;
+            animation: fadeInUp 0.8s ease;
+        }
+
+        @keyframes fadeInUp {
+            from { opacity: 0; transform: translateY(30px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* Search Bar */
+        .search-container {
+            position: relative;
+            margin-bottom: 2rem;
+            max-width: 500px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        .search-container input {
+            width: 100%;
+            padding: 1rem 1.5rem 1rem 3rem;
+            background: rgba(30, 30, 50, 0.6);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 50px;
+            color: white;
+            font-size: 1rem;
+            outline: none;
+            transition: all 0.3s;
+        }
+
+        .search-container input:focus {
+            border-color: #ff4b2b;
+            box-shadow: 0 0 0 3px rgba(255, 75, 43, 0.3);
+        }
+
+        .search-container .search-icon {
+            position: absolute;
+            left: 1rem;
+            top: 50%;
+            transform: translateY(-50%);
+            color: #ff4b2b;
+            font-size: 1.2rem;
+        }
+
+        /* Video Grid */
+        #video-list h2 {
+            font-size: 2.2rem;
+            margin-bottom: 2rem;
+            font-weight: 500;
+            border-left: 8px solid #ff4b2b;
+            padding-left: 1.5rem;
+        }
+
+        .video-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+            gap: 2rem;
+        }
+
+        .video-card {
+            background: rgba(20, 20, 35, 0.7);
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 24px;
+            overflow: hidden;
+            cursor: pointer;
+            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            box-shadow: 0 15px 25px -8px rgba(0,0,0,0.5);
+            animation: cardPop 0.5s ease backwards;
+            animation-delay: calc(0.03s * var(--i, 1));
+        }
+
+        @keyframes cardPop {
+            0% { opacity: 0; transform: scale(0.9) translateY(15px); }
+            100% { opacity: 1; transform: scale(1) translateY(0); }
+        }
+
+        .video-card:hover {
+            transform: translateY(-12px) scale(1.02);
+            box-shadow: 0 30px 40px -10px #ff4b2b80, 0 0 0 1px #ff4b2b inset;
+        }
+
+        .thumbnail {
+            width: 100%;
+            height: 160px;
+            background-color: #2a2a3a;
+            background-size: cover;
+            background-position: center;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #aaa;
+            font-size: 2rem;
+            transition: transform 0.5s;
+        }
+
+        .video-card:hover .thumbnail {
+            transform: scale(1.05);
+        }
+
+        .video-info {
+            padding: 1.2rem;
+        }
+
+        .video-title {
+            font-weight: 700;
+            font-size: 1.1rem;
+            margin-bottom: 0.4rem;
+            color: #fff;
+            display: -webkit-box;
+            -webkit-line-clamp: 1;
+            -webkit-box-orient: vertical;
+            overflow: hidden;
+        }
+
+        .video-description {
+            font-size: 0.9rem;
+            color: #b0b0d0;
+            margin-bottom: 0.5rem;
+            display: -webkit-box;
+            -webkit-line-clamp: 2;
+            -webkit-box-orient: vertical;
+            overflow: hidden;
+        }
+
+        .video-info small {
+            color: #ff9f8f;
+            font-size: 0.8rem;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        /* Modal player */
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 1000;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.9);
+            backdrop-filter: blur(10px);
+            align-items: center;
+            justify-content: center;
+            animation: fadeIn 0.3s;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+
+        .modal-content {
+            width: 90%;
+            max-width: 900px;
+            background: #0a0a14;
+            border-radius: 32px;
+            overflow: hidden;
+            border: 1px solid rgba(255,75,43,0.5);
+            box-shadow: 0 30px 60px rgba(0,0,0,0.8);
+            animation: zoomIn 0.4s;
+        }
+
+        @keyframes zoomIn {
+            from { opacity: 0; transform: scale(0.8); }
+            to { opacity: 1; transform: scale(1); }
+        }
+
+        .close {
+            position: absolute;
+            top: 20px;
+            right: 30px;
+            color: white;
+            font-size: 3rem;
+            cursor: pointer;
+            z-index: 1001;
+            transition: 0.3s;
+            line-height: 1;
+        }
+
+        .close:hover {
+            color: #ff4b2b;
+            transform: rotate(90deg);
+        }
+
+        video {
+            width: 100%;
+            max-height: 70vh;
+            background: black;
+        }
+
+        .modal-info {
+            padding: 1.5rem;
+            background: #12121f;
+        }
+
+        .modal-info h3 {
+            font-size: 1.8rem;
+            margin-bottom: 0.5rem;
+            color: white;
+        }
+
+        .modal-info p {
+            color: #b0b0d0;
+            font-size: 1rem;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <h1><i class="fab fa-youtube" style="margin-right: 8px;"></i>Mavora</h1>
+        <div id="auth-section">
+            <div id="user-info" style="display: none;">
+                <a href="profile.html">
+                    <img id="user-photo" src="" alt="foto profil">
+                </a>
+                <span id="user-name"></span>
+            </div>
+            <a href="login.html" id="login-btn" style="display: block;"><i class="fas fa-sign-in-alt"></i> Login</a>
+        </div>
+    </header>
+    <div class="container">
+        <!-- Search Bar -->
+        <div class="search-container">
+            <input type="text" id="search-input" placeholder="Cari video...">
+            <i class="fas fa-search search-icon"></i>
+        </div>
+
+        <!-- Daftar video -->
+        <div id="video-list">
+            <h2><i class="fas fa-fire" style="color:#ff4b2b; margin-right: 12px;"></i>Video Terbaru</h2>
+            <div class="video-grid" id="video-grid"></div>
+        </div>
+    </div>
+
+    <!-- Modal Player -->
+    <div id="player-modal" class="modal">
+        <span class="close">&times;</span>
+        <div class="modal-content">
+            <video id="modal-video" controls></video>
+            <div class="modal-info">
+                <h3 id="modal-title"></h3>
+                <p id="modal-desc"></p>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script type="module">
+        // Konfigurasi Supabase (GANTI DENGAN MILIK ANDA)
+        const SUPABASE_URL = 'https://dpnouqcvofdhylahjhqq.supabase.co';
+        const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImRwbm91cWN2b2ZkaHlsYWhqaHFxIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzI0NjU1MzYsImV4cCI6MjA4ODA0MTUzNn0.z0DUqOSRIjnLvdeqT6O_-5VV1UZ62Y5SsC0dFNmwafM';
+
+        const { createClient } = supabase;
+        const supabaseClient = createClient(SUPABASE_URL, SUPABASE_ANON_KEY, {
+            auth: { autoRefreshToken: true, persistSession: true }
+        });
+
+        // Elemen DOM
+        const userInfo = document.getElementById('user-info');
+        const userName = document.getElementById('user-name');
+        const userPhoto = document.getElementById('user-photo');
+        const loginBtn = document.getElementById('login-btn');
+        const videoGrid = document.getElementById('video-grid');
+        const modal = document.getElementById('player-modal');
+        const modalVideo = document.getElementById('modal-video');
+        const modalTitle = document.getElementById('modal-title');
+        const modalDesc = document.getElementById('modal-desc');
+        const closeModal = document.querySelector('.close');
+        const searchInput = document.getElementById('search-input');
+
+        let currentUser = null;
+        let channel = null;
+        let allVideos = []; // menyimpan semua video untuk pencarian
+
+        // Muat sesi
+        async function loadSession() {
+            const { data: { session } } = await supabaseClient.auth.getSession();
+            currentUser = session?.user ?? null;
+            updateUIForUser(currentUser);
+        }
+
+        function updateUIForUser(user) {
+            if (user) {
+                userInfo.style.display = 'flex';
+                loginBtn.style.display = 'none';
+                userName.textContent = user.user_metadata?.full_name || user.email || 'User';
+                userPhoto.src = user.user_metadata?.avatar_url || 'https://via.placeholder.com/40';
+            } else {
+                userInfo.style.display = 'none';
+                loginBtn.style.display = 'block';
+            }
+        }
+
+        supabaseClient.auth.onAuthStateChange((event, session) => {
+            currentUser = session?.user ?? null;
+            updateUIForUser(currentUser);
+        });
+
+        loadSession();
+
+        // Ambil semua video
+        async function loadVideos() {
+            const { data, error } = await supabaseClient
+                .from('videos')
+                .select('*')
+                .order('created_at', { ascending: false });
+            if (!error) {
+                allVideos = data;
+                renderVideos(allVideos);
+            }
+        }
+
+        // Filter berdasarkan input pencarian
+        function filterVideos(searchTerm) {
+            if (!searchTerm) return allVideos;
+            const term = searchTerm.toLowerCase();
+            return allVideos.filter(v => 
+                (v.title && v.title.toLowerCase().includes(term)) || 
+                (v.description && v.description.toLowerCase().includes(term))
+            );
+        }
+
+        // Render video ke grid
+        function renderVideos(videos) {
+            videoGrid.innerHTML = '';
+            videos.forEach((v, index) => {
+                const card = document.createElement('div');
+                card.className = 'video-card';
+                card.style.setProperty('--i', index + 1);
+                card.innerHTML = `
+                    <div class="thumbnail" style="background-image: ${v.thumbnail_url ? `url('${v.thumbnail_url}')` : 'linear-gradient(145deg, #3a3a5a, #2a2a3a)'};">
+                        ${v.thumbnail_url ? '' : '<i class="fas fa-video"></i>'}
+                    </div>
+                    <div class="video-info">
+                        <div class="video-title">${escapeHtml(v.title) || 'Tanpa judul'}</div>
+                        <div class="video-description">${escapeHtml(v.description) || ''}</div>
+                        <small><i class="fas fa-user"></i> ${escapeHtml(v.user_name || 'Unknown')}</small>
+                    </div>
+                `;
+                card.onclick = () => {
+                    modalVideo.src = v.video_url;
+                    modalTitle.textContent = v.title;
+                    modalDesc.textContent = v.description || '';
+                    modal.style.display = 'flex';
+                    modalVideo.play().catch(e => console.log(e));
+                };
+                videoGrid.appendChild(card);
+            });
+        }
+
+        // Escape HTML untuk keamanan
+        function escapeHtml(s) {
+            if (!s) return '';
+            return s.replace(/[&<>"]/g, m => ({ '&':'&amp;', '<':'&lt;', '>':'&gt;', '"':'&quot;' })[m]);
+        }
+
+        // Event listener pencarian
+        searchInput.addEventListener('input', (e) => {
+            const filtered = filterVideos(e.target.value);
+            renderVideos(filtered);
+        });
+
+        // Tutup modal
+        closeModal.onclick = () => {
+            modal.style.display = 'none';
+            modalVideo.pause();
+            modalVideo.src = '';
+        };
+        window.onclick = e => { if (e.target == modal) closeModal.onclick(); };
+
+        // Subscribe realtime untuk update otomatis
+        function subscribeToVideos() {
+            if (channel) return;
+            channel = supabaseClient.channel('videos')
+                .on('postgres_changes', { event: '*', schema: 'public', table: 'videos' }, () => {
+                    loadVideos(); // reload semua video
+                })
+                .subscribe();
+        }
+
+        loadVideos();
+        subscribeToVideos();
+    </script>
+</body>
+
+</html>
+
+
+
+
+
