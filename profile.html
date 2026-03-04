@@ -347,7 +347,7 @@
             border-bottom-color: #ff4b2b;
         }
 
-        /* Modal Konfirmasi Hapus */
+        /* Modal Konfirmasi Hapus & Logout */
         .delete-modal {
             display: none;
             position: fixed;
@@ -479,15 +479,28 @@
         </div>
     </div>
 
-    <!-- Modal Konfirmasi Hapus -->
+    <!-- Modal Konfirmasi Hapus Video -->
     <div id="deleteModal" class="delete-modal">
         <div class="modal-content">
             <i class="fas fa-exclamation-triangle"></i>
             <h3>Hapus Video</h3>
             <p id="deleteVideoTitle">Apakah Anda yakin ingin menghapus video ini?</p>
             <div class="modal-actions">
-                <button id="cancelDelete" class="cancel-btn"><i class="fas fa-times" style="margin-right: 6px;"></i>Batal</button>
-                <button id="confirmDelete" class="confirm-btn"><i class="fas fa-trash-alt" style="margin-right: 6px;"></i>Hapus</button>
+                <button id="cancelDelete" class="cancel-btn">Batal</button>
+                <button id="confirmDelete" class="confirm-btn">Hapus</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal Konfirmasi Logout -->
+    <div id="logoutModal" class="delete-modal">
+        <div class="modal-content">
+            <i class="fas fa-sign-out-alt"></i>
+            <h3>Logout</h3>
+            <p>Apakah Anda yakin ingin logout?</p>
+            <div class="modal-actions">
+                <button id="cancelLogout" class="cancel-btn">Batal</button>
+                <button id="confirmLogout" class="confirm-btn">Iya</button>
             </div>
         </div>
     </div>
@@ -518,11 +531,16 @@
         const uploadProgress = document.getElementById('upload-progress');
         const myVideosGrid = document.getElementById('my-videos-grid');
 
-        // Modal elements
+        // Modal hapus
         const deleteModal = document.getElementById('deleteModal');
         const deleteVideoTitle = document.getElementById('deleteVideoTitle');
         const cancelDelete = document.getElementById('cancelDelete');
         const confirmDelete = document.getElementById('confirmDelete');
+
+        // Modal logout
+        const logoutModal = document.getElementById('logoutModal');
+        const cancelLogout = document.getElementById('cancelLogout');
+        const confirmLogout = document.getElementById('confirmLogout');
 
         let currentUser = null;
         let videoToDelete = null; // menyimpan data video yang akan dihapus
@@ -566,10 +584,24 @@
 
         loadSession();
 
-        // Logout
-        logoutBtn?.addEventListener('click', async () => {
+        // Logout dengan konfirmasi
+        logoutBtn?.addEventListener('click', () => {
+            logoutModal.style.display = 'flex';
+        });
+
+        cancelLogout.addEventListener('click', () => {
+            logoutModal.style.display = 'none';
+        });
+
+        confirmLogout.addEventListener('click', async () => {
+            logoutModal.style.display = 'none';
             const { error } = await supabaseClient.auth.signOut();
-            if (error) alert('Logout gagal: ' + error.message);
+            if (error) {
+                alert('Logout gagal: ' + error.message);
+            } else {
+                // Redirect ke halaman utama
+                window.location.href = 'index.html';
+            }
         });
 
         // Fungsi generate thumbnail
@@ -768,7 +800,7 @@
             }
         }
 
-        // Event listener modal
+        // Event listener modal hapus
         cancelDelete.addEventListener('click', () => {
             deleteModal.style.display = 'none';
             videoToDelete = null;
@@ -776,11 +808,14 @@
 
         confirmDelete.addEventListener('click', deleteVideo);
 
-        // Klik di luar modal untuk menutup
+        // Klik di luar modal untuk menutup (untuk kedua modal)
         window.addEventListener('click', (e) => {
             if (e.target === deleteModal) {
                 deleteModal.style.display = 'none';
                 videoToDelete = null;
+            }
+            if (e.target === logoutModal) {
+                logoutModal.style.display = 'none';
             }
         });
 
@@ -790,5 +825,4 @@
         }
     </script>
 </body>
-
 </html>
