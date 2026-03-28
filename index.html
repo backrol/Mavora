@@ -376,7 +376,12 @@
     </div>
 
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script src="https://cdn.onesignal.com/sdks/OneSignalSDK.js" async></script>
+    <script>
+        window.OneSignal = window.OneSignal || [];
+    </script>
     <script type="module">
+        
         // Konfigurasi Supabase (GANTI DENGAN MILIK ANDA)
         const SUPABASE_URL = 'https://dpnouqcvofdhylahjhqq.supabase.co';
         const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImRwbm91cWN2b2ZkaHlsYWhqaHFxIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzI0NjU1MzYsImV4cCI6MjA4ODA0MTUzNn0.z0DUqOSRIjnLvdeqT6O_-5VV1UZ62Y5SsC0dFNmwafM';
@@ -402,7 +407,15 @@
         let currentUser = null;
         let channel = null;
         let allVideos = []; // menyimpan semua video untuk pencarian
-
+        
+        OneSignal.push(function () {
+            OneSignal.init({
+                appId: "6518c388-a93f-4026-bc4c-d0d77af1454c",
+                notifyButton: {
+                    enable: true
+                }
+            });
+        });
         // Muat sesi
         async function loadSession() {
             const { data: { session } } = await supabaseClient.auth.getSession();
@@ -412,6 +425,20 @@
 
         function updateUIForUser(user) {
             if (user) {
+                OneSignal.push(function () {
+                    OneSignal.getUserId().then(async function (playerId) {
+                        if (!playerId) return;
+                        console.log("Player ID:", playerId);
+                        // simpan ke Supabase
+                        await supabaseClient
+                            .from("user_devices")
+                            .upsert({
+                                user_id: user.id,
+                                player_id: playerId
+                            });
+                    });
+                });
+            }
                 userInfo.style.display = 'flex';
                 loginBtn.style.display = 'none';
                 userName.textContent = user.user_metadata?.full_name || user.email || 'User';
