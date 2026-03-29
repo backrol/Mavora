@@ -445,7 +445,7 @@
                         .upsert({
                             user_id: user.id,
                             player_id: playerId
-                        });
+                        }, { onConflict: 'user_id' });
                 });
                 // ✅ UI LOGIN
                 userInfo.style.display = 'flex';
