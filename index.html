@@ -424,9 +424,9 @@
 
         function updateUIForUser(user) {
             if (user) {
+                // 🔔 ambil player_id OneSignal
                 window.OneSignalDeferred = window.OneSignalDeferred || [];
                 OneSignalDeferred.push(async function(OneSignal) {
-                    // tunggu sampai benar-benar ready
                     let playerId = null;
                     for (let i = 0; i < 5; i++) {
                         playerId = await OneSignal.User.PushSubscription.id;
@@ -444,16 +444,18 @@
                             user_id: user.id,
                             player_id: playerId
                         });
+                });
+                // ✅ UI LOGIN
                 userInfo.style.display = 'flex';
                 loginBtn.style.display = 'none';
                 userName.textContent = user.user_metadata?.full_name || user.email || 'User';
                 userPhoto.src = user.user_metadata?.avatar_url || 'https://via.placeholder.com/40';
             } else {
+                // ❌ BELUM LOGIN
                 userInfo.style.display = 'none';
                 loginBtn.style.display = 'block';
             }
         }
-
         supabaseClient.auth.onAuthStateChange((event, session) => {
             currentUser = session?.user ?? null;
             updateUIForUser(currentUser);
