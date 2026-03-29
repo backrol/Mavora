@@ -427,6 +427,7 @@
                 // 🔔 ambil player_id OneSignal
                 window.OneSignalDeferred = window.OneSignalDeferred || [];
                 OneSignalDeferred.push(async function(OneSignal) {
+                    await OneSignal.Notifications.requestPermission();
                     await OneSignal.User.PushSubscription.optIn();
                     let playerId = null;
                     for (let i = 0; i < 5; i++) {
