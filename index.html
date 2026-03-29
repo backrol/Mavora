@@ -376,9 +376,16 @@
     </div>
 
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-    <script src="https://cdn.onesignal.com/sdks/OneSignalSDK.js" async></script>
+    <script src="https://cdn.onesignal.com/sdks/web/v16/OneSignalSDK.page.js" defer></script>
     <script>
-        window.OneSignal = window.OneSignal || [];
+        window.OneSignalDeferred = window.OneSignalDeferred || [];
+        OneSignalDeferred.push(async function(OneSignal) {
+            await OneSignal.init({
+                appId: "6518c388-a93f-4026-bc4c-d0d77af1454c",
+            });
+            // 🔥 ini yang bikin popup muncul
+            await OneSignal.Notifications.requestPermission();
+        });
     </script>
     <script type="module">
         
@@ -408,14 +415,6 @@
         let channel = null;
         let allVideos = []; // menyimpan semua video untuk pencarian
         
-        OneSignal.push(function () {
-            OneSignal.init({
-                appId: "6518c388-a93f-4026-bc4c-d0d77af1454c",
-                notifyButton: {
-                    enable: true
-                }
-            });
-        });
         // Muat sesi
         async function loadSession() {
             const { data: { session } } = await supabaseClient.auth.getSession();
@@ -425,18 +424,17 @@
 
         function updateUIForUser(user) {
             if (user) {
-                OneSignal.push(function () {
-                    OneSignal.getUserId().then(async function (playerId) {
-                        if (!playerId) return;
-                        console.log("Player ID:", playerId);
-                        // simpan ke Supabase
-                        await supabaseClient
-                            .from("user_devices")
-                            .upsert({
-                                user_id: user.id,
-                                player_id: playerId
-                            });
-                    });
+                window.OneSignalDeferred = window.OneSignalDeferred || [];
+                OneSignalDeferred.push(async function(OneSignal) {
+                    const subscription = await OneSignal.User.PushSubscription.id;
+                    if (!subscription) return;
+                    console.log("Player ID:", subscription);
+                    await supabaseClient
+                        .from("user_devices")
+                        .upsert({
+                            user_id: user.id,
+                            player_id: subscription
+                        });
                 });
                 userInfo.style.display = 'flex';
                 loginBtn.style.display = 'none';
