@@ -426,16 +426,24 @@
             if (user) {
                 window.OneSignalDeferred = window.OneSignalDeferred || [];
                 OneSignalDeferred.push(async function(OneSignal) {
-                    const subscription = await OneSignal.User.PushSubscription.id;
-                    if (!subscription) return;
-                    console.log("Player ID:", subscription);
+                    // tunggu sampai benar-benar ready
+                    let playerId = null;
+                    for (let i = 0; i < 5; i++) {
+                        playerId = await OneSignal.User.PushSubscription.id;
+                        if (playerId) break;
+                        await new Promise(r => setTimeout(r, 1000));
+                    }
+                    if (!playerId) {
+                        console.log("Player ID belum dapat");
+                        return;
+                    }
+                    console.log("Player ID:", playerId);
                     await supabaseClient
                         .from("user_devices")
                         .upsert({
                             user_id: user.id,
-                            player_id: subscription
+                            player_id: playerId
                         });
-                });
                 userInfo.style.display = 'flex';
                 loginBtn.style.display = 'none';
                 userName.textContent = user.user_metadata?.full_name || user.email || 'User';
