@@ -11,7 +11,7 @@
     </script>
     <link rel="icon" href="/favicon.ico" type="image/x-icon">
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
     <title>Mavora</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
     <style>
@@ -169,7 +169,7 @@
             font-size: 1.2rem;
         }
 
-        /* Video Grid */
+        /* Video Grid - Responsif untuk semua platform */
         #video-list h2 {
             font-size: 2.2rem;
             margin-bottom: 2rem;
@@ -180,7 +180,7 @@
 
         .video-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
             gap: 2rem;
         }
 
@@ -208,18 +208,26 @@
             box-shadow: 0 30px 40px -10px #ff4b2b80, 0 0 0 1px #ff4b2b inset;
         }
 
+        /* Thumbnail - tidak akan pernah hitam karena background warna cerah + gradien */
         .thumbnail {
             width: 100%;
-            height: 160px;
-            background-color: #2a2a3a;
+            height: 180px;
             background-size: cover;
             background-position: center;
+            background-repeat: no-repeat;
             display: flex;
             align-items: center;
             justify-content: center;
-            color: #aaa;
-            font-size: 2rem;
+            color: white;
+            font-size: 2.5rem;
             transition: transform 0.5s;
+            position: relative;
+            background-color: #7a5a9a; /* fallback warna terang */
+        }
+
+        /* Gradien untuk thumbnail tanpa gambar (cerah) */
+        .thumbnail-default {
+            background: linear-gradient(135deg, #8a6aae, #5a3a7a);
         }
 
         .video-card:hover .thumbnail {
@@ -259,7 +267,7 @@
             gap: 6px;
         }
 
-        /* Modal player */
+        /* Modal player responsif */
         .modal {
             display: none;
             position: fixed;
@@ -282,7 +290,7 @@
 
         .modal-content {
             width: 90%;
-            max-width: 900px;
+            max-width: 1000px;
             background: #0a0a14;
             border-radius: 32px;
             overflow: hidden;
@@ -316,7 +324,7 @@
         video {
             width: 100%;
             max-height: 70vh;
-            background: black;
+            background: #000;
         }
 
         .modal-info {
@@ -333,6 +341,79 @@
         .modal-info p {
             color: #b0b0d0;
             font-size: 1rem;
+        }
+
+        /* ========= MEDIA QUERIES - MENYESUAIKAN UNTUK SEMUA PLATFORM ========= */
+        /* Tablet & HP landscape */
+        @media (max-width: 768px) {
+            .container {
+                padding: 0 1rem;
+                margin: 1rem auto;
+            }
+            .video-grid {
+                grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+                gap: 1.2rem;
+            }
+            .thumbnail {
+                height: 150px;
+            }
+            .modal-content {
+                width: 95%;
+            }
+            .modal-info h3 {
+                font-size: 1.4rem;
+            }
+            header h1 {
+                font-size: 1.4rem;
+            }
+            #user-name {
+                font-size: 0.85rem;
+            }
+        }
+
+        /* HP kecil */
+        @media (max-width: 480px) {
+            .video-grid {
+                grid-template-columns: 1fr;
+                gap: 1rem;
+            }
+            .thumbnail {
+                height: 200px; /* lebih tinggi agar nyaman dilihat di HP */
+            }
+            .container {
+                padding: 0 0.8rem;
+            }
+            .video-title {
+                font-size: 1rem;
+            }
+            .modal-info h3 {
+                font-size: 1.2rem;
+            }
+            .close {
+                top: 10px;
+                right: 20px;
+                font-size: 2.5rem;
+            }
+        }
+
+        /* Tablet landscape (iPad, Android tablet) */
+        @media (min-width: 769px) and (max-width: 1024px) {
+            .video-grid {
+                grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+            }
+            .thumbnail {
+                height: 160px;
+            }
+        }
+
+        /* Desktop besar */
+        @media (min-width: 1400px) {
+            .video-grid {
+                grid-template-columns: repeat(4, 1fr);
+            }
+            .thumbnail {
+                height: 200px;
+            }
         }
     </style>
 </head>
@@ -378,18 +459,21 @@
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <script src="https://cdn.onesignal.com/sdks/web/v16/OneSignalSDK.page.js" defer></script>
     <script>
+        // OneSignal diinisialisasi tanpa memunculkan pop-up permission
         window.OneSignalDeferred = window.OneSignalDeferred || [];
         OneSignalDeferred.push(async function(OneSignal) {
             await OneSignal.init({
                 appId: "6518c388-a93f-4026-bc4c-d0d77af1454c",
             });
-            // 🔥 ini yang bikin popup muncul
-            await OneSignal.Notifications.requestPermission();
+            // 🔥 PERUBAHAN: Tidak meminta permission pop-up, cukup print ke console
+            console.log("OneSignal siap (tanpa pop-up permission). Notifikasi tidak akan meminta izin.");
+            // Baris requestPermission dihapus/dikomentari agar tidak muncul pop-up
+            // await OneSignal.Notifications.requestPermission();
         });
     </script>
     <script type="module">
         
-        // Konfigurasi Supabase (GANTI DENGAN MILIK ANDA)
+        // Konfigurasi Supabase
         const SUPABASE_URL = 'https://dpnouqcvofdhylahjhqq.supabase.co';
         const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImRwbm91cWN2b2ZkaHlsYWhqaHFxIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzI0NjU1MzYsImV4cCI6MjA4ODA0MTUzNn0.z0DUqOSRIjnLvdeqT6O_-5VV1UZ62Y5SsC0dFNmwafM';
 
@@ -424,29 +508,9 @@
 
         function updateUIForUser(user) {
             if (user) {
-                // 🔔 ambil player_id OneSignal
-                window.OneSignalDeferred = window.OneSignalDeferred || [];
-                OneSignalDeferred.push(async function(OneSignal) {
-                    await OneSignal.Notifications.requestPermission();
-                    await OneSignal.User.PushSubscription.optIn();
-                    let playerId = null;
-                    for (let i = 0; i < 5; i++) {
-                        playerId = OneSignal.User.PushSubscription.id;
-                        if (playerId) break;
-                        await new Promise(r => setTimeout(r, 1000));
-                    }
-                    if (!playerId) {
-                        console.log("Player ID belum dapat");
-                        return;
-                    }
-                    console.log("Player ID:", playerId);
-                    await supabaseClient
-                        .from("user_devices")
-                        .upsert({
-                            user_id: user.id,
-                            player_id: playerId
-                        }, { onConflict: 'user_id' });
-                });
+                // 🔔 Bagian OneSignal: tanpa pop-up, hanya console.log
+                console.log("User login:", user.email);
+                // Tidak ada requestPermission atau optIn lagi
                 // ✅ UI LOGIN
                 userInfo.style.display = 'flex';
                 loginBtn.style.display = 'none';
@@ -474,6 +538,8 @@
             if (!error) {
                 allVideos = data;
                 renderVideos(allVideos);
+            } else {
+                console.error("Gagal load video:", error);
             }
         }
 
@@ -487,16 +553,29 @@
             );
         }
 
-        // Render video ke grid
+        // Render video ke grid (thumbnail tidak hitam)
         function renderVideos(videos) {
             videoGrid.innerHTML = '';
             videos.forEach((v, index) => {
                 const card = document.createElement('div');
                 card.className = 'video-card';
                 card.style.setProperty('--i', index + 1);
+                
+                // Thumbnail: pastikan tidak hitam dengan background warna cerah + gradien fallback
+                let thumbnailStyle = '';
+                let thumbnailIcon = '<i class="fas fa-video"></i>';
+                if (v.thumbnail_url && v.thumbnail_url.trim() !== '') {
+                    thumbnailStyle = `background-image: url('${escapeHtml(v.thumbnail_url)}'); background-color: #7a5a9a; background-size: cover; background-position: center;`;
+                    thumbnailIcon = ''; // icon tidak ditampilkan jika ada gambar
+                } else {
+                    // Tidak ada thumbnail_url: gradien warna cerah (ungu terang) + icon
+                    thumbnailStyle = `background: linear-gradient(135deg, #8a6aae, #5a3a7a); background-size: cover;`;
+                    thumbnailIcon = '<i class="fas fa-film"></i>';
+                }
+                
                 card.innerHTML = `
-                    <div class="thumbnail" style="background-image: ${v.thumbnail_url ? `url('${v.thumbnail_url}')` : 'linear-gradient(145deg, #3a3a5a, #2a2a3a)'};">
-                        ${v.thumbnail_url ? '' : '<i class="fas fa-video"></i>'}
+                    <div class="thumbnail" style="${thumbnailStyle}">
+                        ${thumbnailIcon}
                     </div>
                     <div class="video-info">
                         <div class="video-title">${escapeHtml(v.title) || 'Tanpa judul'}</div>
@@ -506,10 +585,10 @@
                 `;
                 card.onclick = () => {
                     modalVideo.src = v.video_url;
-                    modalTitle.textContent = v.title;
+                    modalTitle.textContent = v.title || 'Video';
                     modalDesc.textContent = v.description || '';
                     modal.style.display = 'flex';
-                    modalVideo.play().catch(e => console.log(e));
+                    modalVideo.play().catch(e => console.log("Autoplay dicegah browser:", e));
                 };
                 videoGrid.appendChild(card);
             });
@@ -549,11 +628,4 @@
         subscribeToVideos();
     </script>
 </body>
-
 </html>
-
-
-
-
-
-
